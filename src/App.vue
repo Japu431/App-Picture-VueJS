@@ -14,23 +14,18 @@ export default {
   data() {
     return {
       titulo: "AluraPic",
-      fotos: [
-        {
-          url:
-            "https://www.petz.com.br/blog/wp-content/uploads/2019/04/temperatura-cachorro.jpg",
-          titulo: "Cachorro",
-        },
-        {
-          url:
-            "https://www.petz.com.br/blog/wp-content/uploads/2019/04/temperatura-cachorro.jpg",
-          titulo: "Cachorrão",
-        },
-      ],
+      fotos: [],
     };
+  },
+  created() {
+    let promise = this.$http.get("http://localhost:3000/v1/fotos");
+    promise
+    .then(res => res.json())
+    .then(fotos => this.fotos = fotos)
+    .catch(err => console.log(err))
   },
 };
 </script>
 
-<style
-
+<style>
 </style>
