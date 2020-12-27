@@ -13,7 +13,12 @@
 
   <script>
 export default {
-  props: ["titulo"],
+  props: {
+    titulo: {
+      type: Array,
+      required: true,
+    },
+  },
 
   data() {
     return {

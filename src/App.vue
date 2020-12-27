@@ -1,63 +1,27 @@
-
-
 <template>
   <div class="corpo">
-    <h1 class="center">{{ titulo }}</h1>
-    <input
-      type="search"
-      id="filtro"
-      class="filtro"
-      placeholder="Filtre por parte do título"
-      @input="filtro = $event.target.value"
-      autocomplete="off"
-    />
 
-    <ul class="lista-fotos">
-      <li class="lista-fotos-item" v-for="(foto, i) of fotosComFiltro" :key="i">
-        <MeuPainel :titulo="foto.titulo">
-          <ImageResponsive :url="foto.url" :titulo="foto.titulo"/>
-        </MeuPainel>
-      </li>
-    </ul>
+    <MeuMenu :rotas="routes" />
+
+    <transition name="page">
+      <router-view></router-view>    
+    </transition>
+    
   </div>
 </template>
 
 <script>
-import Painel from "./components/shared/painel/Painel.vue";
-import ImagemResponsiva from "./components/shared/imagem-responsive/ImagemResponsiva.vue";
+import { routes } from "./routes.js";
+import Menu from "./components/shared/menu/Menu.vue";
 
 export default {
   components: {
-    'MeuPainel': Painel,
-    'ImageResponsive' : ImagemResponsiva,
+    MeuMenu: Menu,
   },
-
   data() {
     return {
-      titulo: "AluraPic",
-      fotos: [],
-      filtro: "",
+      routes,
     };
-  },
-
-  computed: {
-    fotosComFiltro() {
-      if (this.filtro) {
-        let exp = new RegExp(this.filtro.trim(), "i");
-        return this.fotos.filter((foto) => exp.test(foto.titulo));
-      } else {
-        return this.fotos;
-      }
-    },
-  },
-
-  created() {
-    let promise = this.$http.get("http://localhost:3000/v1/fotos");
-
-    promise
-      .then((res) => res.json())
-      .then((fotos) => (this.fotos = fotos))
-      .catch((err) => console.log(err));
   },
 };
 </script>
@@ -67,22 +31,13 @@ export default {
   text-align: center;
 }
 
-.corpo {
-  font-family: Helvetica, sans-serif;
-  margin: 0 auto;
-  width: 96%;
+.page-enter,
+.page-leave-active {
+  opacity: 0;
 }
 
-.lista-fotos {
-  list-style: none;
-}
-
-.lista-fotos .lista-fotos-item {
-  display: inline-block;
-}
-
-.filtro {
-  display: block;
-  width: 100%;
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.5s;
 }
 </style>
