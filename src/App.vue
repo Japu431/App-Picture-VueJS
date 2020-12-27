@@ -3,11 +3,19 @@
 <template>
   <div class="corpo">
     <h1 class="center">{{ titulo }}</h1>
+    <input
+      type="search"
+      id="filtro"
+      class="filtro"
+      placeholder="Filtre por parte do título"
+      @input="filtro = $event.target.value"
+      autocomplete="off"
+    />
 
     <ul class="lista-fotos">
-      <li class="lista-fotos-item" v-for="(foto, i) of fotos" :key="i">
+      <li class="lista-fotos-item" v-for="(foto, i) of fotosComFiltro" :key="i">
         <MeuPainel :titulo="foto.titulo">
-          <img class="image-responsive" :src="foto.url" :alt="foto.titulo" />
+          <ImageResponsive :url="foto.url" :titulo="foto.titulo"/>
         </MeuPainel>
       </li>
     </ul>
@@ -16,9 +24,12 @@
 
 <script>
 import Painel from "./components/shared/painel/Painel.vue";
+import ImagemResponsiva from "./components/shared/imagem-responsive/ImagemResponsiva.vue";
+
 export default {
   components: {
-    MeuPainel: Painel,
+    'MeuPainel': Painel,
+    'ImageResponsive' : ImagemResponsiva,
   },
 
   data() {
@@ -28,6 +39,18 @@ export default {
       filtro: "",
     };
   },
+
+  computed: {
+    fotosComFiltro() {
+      if (this.filtro) {
+        let exp = new RegExp(this.filtro.trim(), "i");
+        return this.fotos.filter((foto) => exp.test(foto.titulo));
+      } else {
+        return this.fotos;
+      }
+    },
+  },
+
   created() {
     let promise = this.$http.get("http://localhost:3000/v1/fotos");
 
@@ -56,10 +79,6 @@ export default {
 
 .lista-fotos .lista-fotos-item {
   display: inline-block;
-}
-
-.image-responsive {
-  width: 100%;
 }
 
 .filtro {
