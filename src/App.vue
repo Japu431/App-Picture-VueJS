@@ -1,12 +1,10 @@
 <template>
   <div class="corpo">
-
     <MeuMenu :rotas="routes" />
 
     <transition name="page">
-      <router-view></router-view>    
+      <router-view></router-view>
     </transition>
-    
   </div>
 </template>
 
